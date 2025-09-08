@@ -4,3 +4,7 @@ autopep8
 
 # App
 flask
+qrcode
+pillow
+Flask-SocketIO
+Flask-SQLAlchemy
