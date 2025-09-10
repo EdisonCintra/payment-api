@@ -22,6 +22,19 @@ if payment_id:
 else:
     print("❌ Nenhum pagamento criado para consultar")
 
+
+print("\n=== Baixar QR Code Pix ===")
+if payment_id:
+    file_name = f"qrcode_{payment_id}"  # exemplo: se você gerar o nome do arquivo assim
+    r = requests.get(f"{BASE_URL}/payments/pix/qr_code/{file_name}")
+    if r.status_code == 200:
+        with open(f"{file_name}.png", "wb") as f:
+            f.write(r.content)
+        print(f"✅ QR Code salvo em {file_name}.png")
+    else:
+        print("❌ Não foi possível baixar o QR Code")
+
+
 print("\n=== Confirmar Pagamento Pix ===")
 r = requests.post(f"{BASE_URL}/payments/pix/confirmation", json={"payment_id": payment_id})
 print(r.status_code, r.text)
