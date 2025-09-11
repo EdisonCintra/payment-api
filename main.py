@@ -1,14 +1,19 @@
 import os
 from repository.database import db 
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, render_template
 from db_models.payment import Payment
 from datetime import datetime, timedelta
 from payments.pix import Pix
+from flask_socketio import SocketIO
+
+#BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'SECRET_KEY_WEBSOCKET'
 
+socketio = SocketIO(app)
 db.init_app(app)
 
 
@@ -40,11 +45,15 @@ def pix_confirmation():
 #webhook
 @app.route('/payments/pix/<int:payment_id>', methods=['GET']) 
 def payments_pix_page(payment_id):
-    return 'payment pix'
+    payment = Payment.query.get(payment_id)
+    return render_template('payment.html', payment_id=payment.id, 
+                                            value=payment.value, 
+                                            host='http://127.0.0.1:5000',
+                                            qr_code=payment.qrcode)
 
 def main():
     app.run(port=int(os.environ.get('PORT', 80)))
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    socketio.run(app, host="0.0.0.0", port=port, debug=True)

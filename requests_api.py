@@ -4,7 +4,7 @@ from datetime import datetime
 BASE_URL = "http://127.0.0.1:5000"
 
 print("\n=== Criar Pagamento Pix ===")
-r = requests.post(f"{BASE_URL}/payments/pix", json={"value": 150.0})
+r = requests.post(f"{BASE_URL}/payments/pix", json={"value": 200.0})
 print(r.status_code, r.text)
 
 # Se a criação deu certo, pega o ID do pagamento retornado
